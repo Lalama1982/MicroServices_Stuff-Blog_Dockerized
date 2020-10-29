@@ -31,7 +31,11 @@ app.post("/posts/:id/comments", async (req, res) => {
   commentsByPostId[req.params.id] = comments;
 
   // Emitting the event to the "Event-Bus"
-  await axios.post("http://localhost:4005/events", {
+  //await axios.post("http://localhost:4005/events", {
+
+  // Emitting to "event-bus" service running in docker under Kube service
+  // "event-bus-srv" is the service defined in Kube. (get the list by "kubectl get services")
+  await axios.post("http://event-bus-srv:4005/events", {
     type: "CommentCreated",
     data: { id: commentId, content, postId: req.params.id, status: "pending" },
   });
@@ -74,7 +78,10 @@ app.post("/events", async (req, res) => {
     comment.content = content;
 
     // Emitting the event to the "Event-Bus" after comment is updated
-    await axios.post("http://localhost:4005/events", {
+    //await axios.post("http://localhost:4005/events", {
+    // Emitting to "event-bus" service running in docker under Kube service
+    // "event-bus-srv" is the service defined in Kube. (get the list by "kubectl get services")
+    await axios.post("http://event-bus-srv:4005/events", {
       type: "CommentUpdated",
       data: { id, content, postId, status },
     });

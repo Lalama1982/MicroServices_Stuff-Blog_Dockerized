@@ -24,8 +24,11 @@ app.post("/events", async (req, res) => {
     // if the "comment.content" has the word "orange", it will be set as "rejected"
     const status = data.content.includes("orange") ? "rejected" : "approved";
 
-    // Emitting the event to the "Event-Bus"
-    await axios.post("http://localhost:4005/events", {
+    // -> Emitting the event to the "Event-Bus"
+    // -> await axios.post("http://localhost:4005/events", {
+    // Emitting to "event-bus" service running in docker under Kube service
+    // "event-bus-srv" is the service defined in Kube. (get the list by "kubectl get services")
+    await axios.post("http://event-bus-srv:4005/events", {
       type: "CommentModerated",
       data: {
         id: data.id,

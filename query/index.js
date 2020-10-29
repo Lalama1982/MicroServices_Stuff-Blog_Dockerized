@@ -82,10 +82,13 @@ app.post("/events", (req, res) => {
 app.listen(4002, async () => {
   console.log("[query service - index] ::  Listening on 4002!");
 
-  // After the service is up, "query" service will call the "event-bus" service and get all events from its store
-  const res = await axios.get("http://localhost:4005/events");
+  // -> After the service is up, "query" service will call the "event-bus" service and get all events from its store
+  // -> const res = await axios.get("http://localhost:4005/events");
+  // Emitting to "event-bus" service running in docker under Kube service
+  // "event-bus-srv" is the service defined in Kube. (get the list by "kubectl get services")
+  const res = await axios.get("http://event-bus-srv:4005/events");
 
-  console.log("[query service - index] :: res.length >> ",res.data.length);
+  console.log("[query service - index] :: res.length >> ", res.data.length);
   for (let event of res.data) {
     console.log("[query service - index] :: Processing Event: ", event.type);
     handleEvent(event.type, event.data);

@@ -24,10 +24,19 @@ app.post("/posts", async (req, res) => {
   };
 
   // Emitting the event to the "Event-Bus"
+  /*
   await axios.post("http://localhost:4005/events", {
     type: "PostCreated",
     data: { id, title },
   });
+  */
+  
+  // Emitting to "event-bus" service running in docker under Kube service
+  // "event-bus-srv" is the service defined in Kube. (get the list by "kubectl get services")
+  await axios.post("http://event-bus-srv:4005/events", {
+    type: "PostCreated",
+    data: { id, title },
+  });  
 
   res.status(201).send(posts[id]);
 });
@@ -39,5 +48,6 @@ app.post("/events", (req, res) => {
 });
 
 app.listen(4000, () => {
+  console.log("Version: 3.0");
   console.log('[posts - index] :: Listening on 4000!');
 });

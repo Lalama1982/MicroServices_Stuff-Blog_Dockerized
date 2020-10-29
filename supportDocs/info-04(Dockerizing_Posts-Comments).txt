@@ -8,7 +8,9 @@
 
 4) Following the below command, a build could be built with an image id & tag name
     docker build -t lalama1982/posts .
-    [here "lalama1982" is the docker name]    
+    [here "lalama1982" is the docker name] 
+
+    With a version: docker build -t lalama1982/posts:0.0.1 .   
 
     Once executed at the end it show the image id & tag name
     e.g. Successfully built f6abc7e3f544
